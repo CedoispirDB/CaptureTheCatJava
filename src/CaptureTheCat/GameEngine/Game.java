@@ -1,9 +1,12 @@
 package CaptureTheCat.GameEngine;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Canvas;
+import java.awt.*;
 import java.awt.image.BufferStrategy;
+
+import Movement.KeyInput;
+import Movement.MouseInput;
+import Player.Player;
+import World.Map;
 
 public class Game extends Canvas implements Runnable {
 
@@ -12,6 +15,9 @@ public class Game extends Canvas implements Runnable {
 
     private Thread thread;
     private boolean running = false;
+
+    private final Handler handler;
+    private final Map map;
 
     public enum STATES {
         Menu,
@@ -22,7 +28,17 @@ public class Game extends Canvas implements Runnable {
         Florest
     }
 
+
     public Game() {
+
+        handler = new Handler();
+//        handler.addObject(new Player(this, 500, 500, ID.Player, handler));
+        map = new Map(this, handler);
+
+        this.addKeyListener(new KeyInput(handler, this, map));
+
+        MouseInput mouseInput = new MouseInput(this, handler, map);
+        this.addMouseListener(mouseInput);
 
         new Window(WIDTH, HEIGHT, "Capture The Cats", this);
 
@@ -44,7 +60,7 @@ public class Game extends Canvas implements Runnable {
         }
     }
 
-    // CaptureTheCat.GameEngine.Game loop
+    // CaptureTheCat.CaptureTheCat.Player.Player.GameEngine.Player.Player.GameEngine.Game loop
     public void run() {
         this.requestFocus();
         long lastTime = System.nanoTime();
@@ -69,7 +85,7 @@ public class Game extends Canvas implements Runnable {
 
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
-                System.out.println("FPS: " + frames);
+//                System.out.println("FPS: " + frames);
                 frames = 0;
             }
         }
@@ -77,6 +93,7 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void tick() {
+        handler.tick();
 
     }
 
@@ -91,6 +108,19 @@ public class Game extends Canvas implements Runnable {
         Graphics g = bs.getDrawGraphics();
         Graphics2D g2d = (Graphics2D) g;
 
+        handler.render(g);
+        map.render(g);
+        g.dispose();
+        bs.show();
+    }
+
+    public static float clamp(float var, float min, float max) {
+        if (var >= max) {
+            return max;
+        } else if (var <= min) {
+            return min;
+        }
+        return var;
     }
 
     public static void main(String[] args) {

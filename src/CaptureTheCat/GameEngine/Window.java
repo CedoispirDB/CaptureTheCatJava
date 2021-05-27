@@ -1,7 +1,5 @@
 package CaptureTheCat.GameEngine;
 
-import CaptureTheCat.GameEngine.Game;
-
 import javax.swing.JFrame;
 import java.awt.Canvas;
 import java.awt.Dimension;
