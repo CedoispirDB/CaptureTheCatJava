@@ -5,12 +5,13 @@ import CaptureTheCat.GameEngine.GameObject;
 import CaptureTheCat.GameEngine.Handler;
 import CaptureTheCat.GameEngine.ID;
 import Entities.NormalCat;
-import Player.Player;
+import Player.Inventory;
 import World.Map;
 import images.SpriteSheet;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Random;
 
 public class KeyInput extends KeyAdapter {
 
@@ -21,14 +22,25 @@ public class KeyInput extends KeyAdapter {
     protected SpriteSheet ss;
     private Map map;
     private GameObject player;
+    private Inventory inventory;
     private GameObject[] cats;
+    private Random r;
+    private int[] directions;
 
     private int previousKey = 0;
 
-    public KeyInput(Handler handler, Game game, Map map) {
+    public KeyInput(Handler handler, Game game, Map map, Inventory inventory) {
         this.handler = handler;
         this.game = game;
         this.map = map;
+        this.inventory = inventory;
+        r = new Random();
+
+        directions = new int[4];
+        directions[0] = 32;
+        directions[1] = -32;
+        directions[2] = 48;
+        directions[3] = -48;
 
         // 'w' key
         keyDown[0] = false;
@@ -85,34 +97,50 @@ public class KeyInput extends KeyAdapter {
         }
 
         if (key == KeyEvent.VK_SPACE) {
-            for (GameObject temp : handler.object) {
+            for (int i = 0; i < handler.object.size(); i++) {
+                GameObject temp = handler.object.get(i);
                 if (temp.getId() == ID.SimpleRed || temp.getId() == ID.SimpleBlue || temp.getId() == ID.SimpleGreen) {
                     if (player.getBounds().intersects(temp.getBounds())) {
-                        System.out.println("Get cat");
+                        if (inventory.inventoryItems.size() < 5) {
+                            inventory.getItem(temp);
+                            handler.removeObject(temp);
+
+                        }
+
                     }
                 }
-            }
 
+            }
         }
 
         // Debugg
         if (key == KeyEvent.VK_L) {
             for (int i = 0; i < handler.object.size(); i++) {
                 GameObject cat = handler.object.get(i);
-                if(cat.getId() == ID.SimpleRed) {
-                    if (cat.getVelY() == 5){
+                if (cat.getId() == ID.SimpleRed) {
+                    if (cat.getVelY() == 5) {
                         cat.setVelY(1);
-                    } else if (cat.getVelY() == -5){
-                         cat.setVelY(-1);
-                    }  else if (cat.getVelY() == 1){
+                    } else if (cat.getVelY() == -5) {
+                        cat.setVelY(-1);
+                    } else if (cat.getVelY() == 1) {
                         cat.setVelY(5);
-                    }  else if (cat.getVelY() == -1){
+                    } else if (cat.getVelY() == -1) {
                         cat.setVelY(-5);
                     }
                 }
             }
         }
-        if (key == KeyEvent.VK_ESCAPE || key == KeyEvent.VK_Q) {
+
+        if (key == KeyEvent.VK_Q) {
+            GameObject temp = inventory.removeItem();
+            if (temp != null) {
+                handler.addObject(temp);
+                temp.setX((int) player.getX() + directions[r.nextInt(2)]);
+                temp.setY((int) player.getY() + directions[r.nextInt(2) + 2]);
+            }
+        }
+
+        if (key == KeyEvent.VK_ESCAPE) {
             System.exit(1);
         }
     }

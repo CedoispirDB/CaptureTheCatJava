@@ -1,4 +1,5 @@
 package CaptureTheCat.GameEngine;
+
 import World.Map;
 
 import java.awt.*;
@@ -11,6 +12,7 @@ public abstract class GameObject {
     private Handler handler;
     private float h;
     private float w;
+    protected int position;
 
     public GameObject(Game game, float x, float y, ID id, Handler handler, Map map) {
         this.x = x;
@@ -27,9 +29,9 @@ public abstract class GameObject {
 
     public abstract Rectangle getBounds2();
 
-    public abstract  Rectangle getBoundX();
+    public abstract Rectangle getBoundX();
 
-    public abstract  Rectangle getBoundY();
+    public abstract Rectangle getBoundY();
 
     public void setX(int x) {
         this.x = x;
@@ -71,12 +73,24 @@ public abstract class GameObject {
         return velY;
     }
 
-    public float getW(){
+    public float getW() {
         return w;
     }
 
-    public float getH(){
+    public float getH() {
         return h;
     }
 
+    public void renderInventory(Graphics g) {
+
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+
+    }
+
+    public int getPosition() {
+        return position;
+    }
 }

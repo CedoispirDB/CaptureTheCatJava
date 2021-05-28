@@ -2,12 +2,14 @@ package CaptureTheCat.GameEngine;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.util.LinkedList;
 import java.util.Random;
 
 import Entities.NormalCat;
 import Movement.KeyInput;
 import Movement.MouseInput;
 import Player.Player;
+import Player.Inventory;
 import World.Camera;
 import World.Map;
 
@@ -23,6 +25,7 @@ public class Game extends Canvas implements Runnable {
     private final Handler handler;
     private final Map map;
     private final Camera camera;
+    private final Inventory inventory;
 
     public enum STATES {
         Menu,
@@ -41,15 +44,17 @@ public class Game extends Canvas implements Runnable {
         handler = new Handler();
         map = new Map(this, handler);
         camera = new Camera(0, 0);
+        inventory = new Inventory(handler, map);
         handler.addObject(new Player(this, 500, 500, ID.Player, handler, map));
-        for (int i = 0; i < 10; i++) {
-            handler.addObject(new NormalCat(this, r.nextInt(WIDTH - 32) + 1, r.nextInt(HEIGHT - 32) + 1, randomID(ID.SimpleCats()), handler, map));
+
+        for (int i = 0; i < 7; i++) {
+            handler.addObject(new NormalCat(this, r.nextInt(WIDTH - 32) + 32, r.nextInt(HEIGHT - 32) + 32, randomID(ID.SimpleCats()), handler, map, inventory));
 
         }
 //        handler.addObject(new NormalCat(this, 500, 500, ID.SimpleRed, handler, map));
 
 
-        this.addKeyListener(new KeyInput(handler, this, map));
+        this.addKeyListener(new KeyInput(handler, this, map, inventory));
 
         MouseInput mouseInput = new MouseInput(this, handler, map);
         this.addMouseListener(mouseInput);
@@ -132,11 +137,14 @@ public class Game extends Canvas implements Runnable {
 
         g2d.translate(-camera.getX(), -camera.getY());
 
+
+
         map.render(g);
 
         handler.render(g);
 
         g2d.translate(camera.getX(), camera.getY());
+        inventory.render(g);
 
         g.dispose();
         bs.show();
@@ -151,9 +159,9 @@ public class Game extends Canvas implements Runnable {
         return var;
     }
 
-    public static ID randomID(ID[] IDArray) {
+    public static ID randomID(LinkedList<ID> IDList) {
         Random r = new Random();
-        return IDArray[r.nextInt(IDArray.length)];
+        return IDList.get(r.nextInt(IDList.size()));
     }
 
     public static void main(String[] args) {

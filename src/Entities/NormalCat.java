@@ -4,6 +4,7 @@ import CaptureTheCat.GameEngine.Game;
 import CaptureTheCat.GameEngine.GameObject;
 import CaptureTheCat.GameEngine.Handler;
 import CaptureTheCat.GameEngine.ID;
+import Player.Inventory;
 import World.Map;
 import images.Animation;
 
@@ -19,62 +20,84 @@ public class NormalCat extends GameObject {
     private final Random r = new Random();
 
     private final Handler handler;
+    private GameObject player;
+    private Inventory inventory;
+    private final BufferedImage catDisplaySkins;
 
 
-    public NormalCat(Game game, float x, float y, ID id, Handler handler, Map map) {
+    public NormalCat(Game game, float x, float y, ID id, Handler handler, Map map, Inventory inventory) {
         super(game, x, y, id, handler, map);
 
         this.handler = handler;
+        this.inventory = inventory;
 
-        BufferedImage[] poppySkin = new BufferedImage[6];
+        BufferedImage[] catSkin = new BufferedImage[6];
 
-        int xPos  = 35;
+        // Cat display skin
+        int xPos = 35;
         int yPos = 38;
 
         if (id == ID.SimpleRed) {
             // Load red skin
             //35 x 38
-            poppySkin[0] = map.simpleCatSS.grabImage2(xPos, 0, 35, 38);
-            poppySkin[1] = map.simpleCatSS.grabImage2(xPos * 2 , 0, 35, 38);
-            poppySkin[2] = map.simpleCatSS.grabImage2(xPos * 3 , 0, 35, 38);
+            catSkin[0] = map.simpleCatSS.grabImage2(xPos, 0, 35, 38);
+            catSkin[1] = map.simpleCatSS.grabImage2(xPos * 2, 0, 35, 38);
+            catSkin[2] = map.simpleCatSS.grabImage2(xPos * 3, 0, 35, 38);
 
-            poppySkin[3] = map.simpleCatSS.grabImage2(xPos, yPos, 35, 38);
-            poppySkin[4] = map.simpleCatSS.grabImage2(xPos * 2, yPos, 35, 38);
-            poppySkin[5] = map.simpleCatSS.grabImage2(xPos * 3, yPos, 35, 38);
+            catSkin[3] = map.simpleCatSS.grabImage2(xPos, yPos, 35, 38);
+            catSkin[4] = map.simpleCatSS.grabImage2(xPos * 2, yPos, 35, 38);
+            catSkin[5] = map.simpleCatSS.grabImage2(xPos * 3, yPos, 35, 38);
+
+            catDisplaySkins = map.simpleCatSS.grabImage2(0, 38, 35, 38);
+
 
         } else if (id == ID.SimpleBlue) {
             // Load blue skin
 
-            poppySkin[0] = map.simpleCatSS.grabImage2(xPos, yPos * 2, 35, 38);
-            poppySkin[1] = map.simpleCatSS.grabImage2(xPos * 2 , yPos * 2, 35, 38);
-            poppySkin[2] = map.simpleCatSS.grabImage2(xPos * 3 , yPos * 2, 35, 38);
+            catSkin[0] = map.simpleCatSS.grabImage2(xPos, yPos * 2, 35, 38);
+            catSkin[1] = map.simpleCatSS.grabImage2(xPos * 2, yPos * 2, 35, 38);
+            catSkin[2] = map.simpleCatSS.grabImage2(xPos * 3, yPos * 2, 35, 38);
 
-            poppySkin[3] = map.simpleCatSS.grabImage2(xPos, yPos * 3, 35, 38);
-            poppySkin[4] = map.simpleCatSS.grabImage2(xPos * 2, yPos * 3, 35, 38);
-            poppySkin[5] = map.simpleCatSS.grabImage2(xPos * 3, yPos * 3, 35, 38);
+            catSkin[3] = map.simpleCatSS.grabImage2(xPos, yPos * 3, 35, 38);
+            catSkin[4] = map.simpleCatSS.grabImage2(xPos * 2, yPos * 3, 35, 38);
+            catSkin[5] = map.simpleCatSS.grabImage2(xPos * 3, yPos * 3, 35, 38);
+
+            catDisplaySkins = map.simpleCatSS.grabImage2(0, 38 * 3, 35, 38);
 
         } else if (id == ID.SimpleGreen) {
             // Load green skin
-            poppySkin[0] = map.simpleCatSS.grabImage2(xPos, yPos * 4, 35, 38);
-            poppySkin[1] = map.simpleCatSS.grabImage2(xPos * 2 , yPos * 4, 35, 38);
-            poppySkin[2] = map.simpleCatSS.grabImage2(xPos * 3 , yPos * 4, 35, 38);
+            catSkin[0] = map.simpleCatSS.grabImage2(xPos, yPos * 4, 35, 38);
+            catSkin[1] = map.simpleCatSS.grabImage2(xPos * 2, yPos * 4, 35, 38);
+            catSkin[2] = map.simpleCatSS.grabImage2(xPos * 3, yPos * 4, 35, 38);
 
-            poppySkin[3] = map.simpleCatSS.grabImage2(xPos, yPos * 5, 35, 38);
-            poppySkin[4] = map.simpleCatSS.grabImage2(xPos * 2, yPos * 5, 35, 38);
-            poppySkin[5] = map.simpleCatSS.grabImage2(xPos * 3, yPos * 5, 35, 38);
+            catSkin[3] = map.simpleCatSS.grabImage2(xPos, yPos * 5, 35, 38);
+            catSkin[4] = map.simpleCatSS.grabImage2(xPos * 2, yPos * 5, 35, 38);
+            catSkin[5] = map.simpleCatSS.grabImage2(xPos * 3, yPos * 5, 35, 38);
 
+            catDisplaySkins = map.simpleCatSS.grabImage2(0, 38 * 5, 35, 38);
+
+        } else {
+            catDisplaySkins = null;
         }
 
 
-        animLeft = new Animation(3, poppySkin[0], poppySkin[1], poppySkin[2]);
-        animRight = new Animation(3, poppySkin[3], poppySkin[4], poppySkin[5]);
+        animLeft = new Animation(3, catSkin[0], catSkin[1], catSkin[2]);
+        animRight = new Animation(3, catSkin[3], catSkin[4], catSkin[5]);
 
         velX = r.nextInt(4) - 2;
-        velY = r.nextInt(4) - 2 ;
+        velY = r.nextInt(4) - 2;
 
         if (velX == 0 & velY == 0) {
-            velX = r.nextInt(3) ;
+            velX = r.nextInt(3);
             velY = r.nextInt(3);
+        }
+
+
+        for (GameObject temp : handler.object) {
+            if (temp.getId() == ID.Player) {
+                player = temp;
+            }
+
         }
     }
 
@@ -82,7 +105,6 @@ public class NormalCat extends GameObject {
 
         x += velX;
         y += velY;
-
 
 
         if (velX > 0) {
@@ -93,7 +115,7 @@ public class NormalCat extends GameObject {
 
         for (int i = 0; i < handler.object.size(); i++) {
             GameObject tempObject = handler.object.get(i);
-            if (tempObject.getId() == ID.Wall) {
+            if (tempObject.getId() == ID.Wall || ID.SimpleCats().contains(tempObject.getId()) && this.getId() != tempObject.getId()) {
                 if (this.getBounds().intersects(tempObject.getBounds())) {
 //                    System.out.println("hit");
                     velX = velX * -1;
@@ -102,7 +124,9 @@ public class NormalCat extends GameObject {
                 }
             }
         }
+
 //        System.out.println(velY);
+
 
     }
 
@@ -115,6 +139,26 @@ public class NormalCat extends GameObject {
         } else {
             animLeft.drawAnimation(g, x, y, 0);
         }
+    }
+
+    public void renderInventory(Graphics g) {
+        if (position == 1) {
+            g.drawImage(catDisplaySkins, 45, 251, null);
+        } else if (position == 2) {
+            g.drawImage(catDisplaySkins, 45, 251 + 69, null);
+
+        } else if (position == 3) {
+            g.drawImage(catDisplaySkins, 45, 251 + 69 * 2, null);
+
+        } else if (position == 4) {
+            g.drawImage(catDisplaySkins, 45, 251 + 69 * 3, null);
+
+        } else if (position == 5) {
+            g.drawImage(catDisplaySkins, 45, 251 + 69 * 4, null);
+
+        }
+
+
     }
 
     public Rectangle getBounds() {
