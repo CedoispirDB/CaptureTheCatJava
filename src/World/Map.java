@@ -78,7 +78,7 @@ public class Map {
 
 
                 if (green == 255 && blue == 0) {
-//                    handler.addObject(new Enemy(this, x * 32, y * 32, ID.Enemy, handler, hud, ss));
+                    handler.addObject(new Bush(game, x * 32, y * 32, ID.Bush, handler, this));
                 }
 
                 if (green == 255 && blue == 255) {

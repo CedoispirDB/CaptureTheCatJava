@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 public enum ID {
     Player,
-    Wall, SimpleRed, SimpleGreen, SimpleBlue;
+    Wall, SimpleRed, SimpleGreen, SimpleBlue, Bush;
 
     public static LinkedList<ID> SimpleCats() {
         LinkedList<ID> ids = new LinkedList<>();
@@ -17,11 +17,6 @@ public enum ID {
         ids.add(SimpleBlue);
         return ids;
     }
-    public static ID[] RareCats() {
-        return new ID[]{SimpleRed, SimpleBlue, SimpleGreen};
-    }
-    public static ID[] LegendaryCats() {
-        return new ID[]{SimpleRed, SimpleBlue, SimpleGreen};
-    }
+
 
 }
