@@ -2,10 +2,13 @@ package CaptureTheCat.GameEngine;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.util.Random;
 
+import Entities.NormalCat;
 import Movement.KeyInput;
 import Movement.MouseInput;
 import Player.Player;
+import World.Camera;
 import World.Map;
 
 public class Game extends Canvas implements Runnable {
@@ -16,8 +19,10 @@ public class Game extends Canvas implements Runnable {
     private Thread thread;
     private boolean running = false;
 
+
     private final Handler handler;
     private final Map map;
+    private final Camera camera;
 
     public enum STATES {
         Menu,
@@ -31,14 +36,24 @@ public class Game extends Canvas implements Runnable {
 
     public Game() {
 
+        Random r = new Random();
+
         handler = new Handler();
-//        handler.addObject(new Player(this, 500, 500, ID.Player, handler));
         map = new Map(this, handler);
+        camera = new Camera(0, 0);
+        handler.addObject(new Player(this, 500, 500, ID.Player, handler, map));
+        for (int i = 0; i < 10; i++) {
+            handler.addObject(new NormalCat(this, r.nextInt(WIDTH - 32) + 1, r.nextInt(HEIGHT - 32) + 1, randomID(ID.SimpleCats()), handler, map));
+
+        }
+//        handler.addObject(new NormalCat(this, 500, 500, ID.SimpleRed, handler, map));
+
 
         this.addKeyListener(new KeyInput(handler, this, map));
 
         MouseInput mouseInput = new MouseInput(this, handler, map);
         this.addMouseListener(mouseInput);
+
 
         new Window(WIDTH, HEIGHT, "Capture The Cats", this);
 
@@ -60,7 +75,7 @@ public class Game extends Canvas implements Runnable {
         }
     }
 
-    // CaptureTheCat.CaptureTheCat.Player.Player.GameEngine.Player.Player.GameEngine.Game loop
+    // Game loop
     public void run() {
         this.requestFocus();
         long lastTime = System.nanoTime();
@@ -93,6 +108,12 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void tick() {
+
+        for (int i = 0; i < handler.object.size(); i++) {
+            if (handler.object.get(i).getId() == ID.Player) {
+                camera.tick(handler.object.get(i));
+            }
+        }
         handler.tick();
 
     }
@@ -108,8 +129,15 @@ public class Game extends Canvas implements Runnable {
         Graphics g = bs.getDrawGraphics();
         Graphics2D g2d = (Graphics2D) g;
 
-        handler.render(g);
+
+        g2d.translate(-camera.getX(), -camera.getY());
+
         map.render(g);
+
+        handler.render(g);
+
+        g2d.translate(camera.getX(), camera.getY());
+
         g.dispose();
         bs.show();
     }
@@ -121,6 +149,11 @@ public class Game extends Canvas implements Runnable {
             return min;
         }
         return var;
+    }
+
+    public static ID randomID(ID[] IDArray) {
+        Random r = new Random();
+        return IDArray[r.nextInt(IDArray.length)];
     }
 
     public static void main(String[] args) {

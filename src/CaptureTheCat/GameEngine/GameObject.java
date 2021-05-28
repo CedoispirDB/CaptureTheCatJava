@@ -1,4 +1,6 @@
 package CaptureTheCat.GameEngine;
+import World.Map;
+
 import java.awt.*;
 
 public abstract class GameObject {
@@ -10,7 +12,7 @@ public abstract class GameObject {
     private float h;
     private float w;
 
-    public GameObject(Game game, float x, float y, ID id, Handler handler) {
+    public GameObject(Game game, float x, float y, ID id, Handler handler, Map map) {
         this.x = x;
         this.y = y;
         this.id = id;

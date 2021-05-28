@@ -4,6 +4,8 @@ import CaptureTheCat.GameEngine.Game;
 import CaptureTheCat.GameEngine.GameObject;
 import CaptureTheCat.GameEngine.Handler;
 import CaptureTheCat.GameEngine.ID;
+import Entities.NormalCat;
+import Player.Player;
 import World.Map;
 import images.SpriteSheet;
 
@@ -18,6 +20,8 @@ public class KeyInput extends KeyAdapter {
     private final Game game;
     protected SpriteSheet ss;
     private Map map;
+    private GameObject player;
+    private GameObject[] cats;
 
     private int previousKey = 0;
 
@@ -34,6 +38,14 @@ public class KeyInput extends KeyAdapter {
         keyDown[2] = false;
         // 'a' key
         keyDown[3] = false;
+
+        for (GameObject temp : handler.object) {
+            if (temp.getId() == ID.Player) {
+                player = temp;
+            }
+
+        }
+
     }
 
 
@@ -72,6 +84,34 @@ public class KeyInput extends KeyAdapter {
 
         }
 
+        if (key == KeyEvent.VK_SPACE) {
+            for (GameObject temp : handler.object) {
+                if (temp.getId() == ID.SimpleRed || temp.getId() == ID.SimpleBlue || temp.getId() == ID.SimpleGreen) {
+                    if (player.getBounds().intersects(temp.getBounds())) {
+                        System.out.println("Get cat");
+                    }
+                }
+            }
+
+        }
+
+        // Debugg
+        if (key == KeyEvent.VK_L) {
+            for (int i = 0; i < handler.object.size(); i++) {
+                GameObject cat = handler.object.get(i);
+                if(cat.getId() == ID.SimpleRed) {
+                    if (cat.getVelY() == 5){
+                        cat.setVelY(1);
+                    } else if (cat.getVelY() == -5){
+                         cat.setVelY(-1);
+                    }  else if (cat.getVelY() == 1){
+                        cat.setVelY(5);
+                    }  else if (cat.getVelY() == -1){
+                        cat.setVelY(-5);
+                    }
+                }
+            }
+        }
         if (key == KeyEvent.VK_ESCAPE || key == KeyEvent.VK_Q) {
             System.exit(1);
         }

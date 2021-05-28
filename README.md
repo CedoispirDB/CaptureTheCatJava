@@ -1,7 +1,6 @@
 # CaptureTheCatJava
 
 For now:
-- Make camera movement
 - Do a better spritesheet
 - Do a better animation
   - Work on the class animation
@@ -10,7 +9,6 @@ For now:
     - Rare skins
     - Legendary(Dragon)
 - Make storage with different cat displays
-- Increase the world size
 - Decorate the environment
 - Make better player skins
     - Female and male
