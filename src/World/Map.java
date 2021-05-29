@@ -21,11 +21,17 @@ public class Map {
     public final SpriteSheet spriteSheet;
     public final SpriteSheet simpleCatSS;
 
+    public final SpriteSheet testPlayer;
+
     public Map(Game game, Handler handler) {
         this.game = game;
         this.handler = handler;
 
         BufferedImageLoader loader = new BufferedImageLoader();
+
+        BufferedImage pss = loader.loadImage("/female1.png");
+        testPlayer = new SpriteSheet(pss);
+
 
         // Load spriteSheet
         BufferedImage spriteSheetLayout = loader.loadImage("/SpriteSheet.png");

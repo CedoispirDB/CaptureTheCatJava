@@ -20,7 +20,6 @@ public class Player extends GameObject {
     private Animation anim;
 
 
-
     public Player(Game game, int x, int y, ID id, Handler handler, Map map) {
         super(game, x, y, id, handler, map);
 
@@ -28,9 +27,15 @@ public class Player extends GameObject {
         this.handler = handler;
         this.map = map;
 
+        //140 x 220
+        // 76 x 33
+        // 54 x 25
+
         playerSkin[0] = map.spriteSheet.grabImage(1, 1, 32, 48);
         playerSkin[1] = map.spriteSheet.grabImage(2, 1, 32, 48);
         playerSkin[2] = map.spriteSheet.grabImage(3, 1, 32, 48);
+
+
 //
         anim = new Animation(3, playerSkin[0], playerSkin[1], playerSkin[2]);
 
@@ -51,6 +56,11 @@ public class Player extends GameObject {
     }
 
     public void render(Graphics g) {
+
+        Graphics2D g2d = (Graphics2D) g;
+
+//        g.drawImage(map.testPlayer.grabImage2(0 ,0, 30, 75), (int) x, (int) y, null);
+
         if (velX == 0 && velY == 0) {
             g.drawImage(playerSkin[0], (int) x, (int) y, null);
         } else {
@@ -72,6 +82,7 @@ public class Player extends GameObject {
             }
         }
     }
+
     public Rectangle getBounds() {
         float bx = x + velX + 2;
         float by = y;
