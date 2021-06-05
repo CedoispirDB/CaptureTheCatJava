@@ -12,6 +12,7 @@ import Player.Player;
 import Player.Inventory;
 import World.Camera;
 import World.Map;
+import View.Menu;
 
 public class Game extends Canvas implements Runnable {
 
@@ -26,6 +27,7 @@ public class Game extends Canvas implements Runnable {
     private final Map map;
     private final Camera camera;
     private final Inventory inventory;
+    private final  Menu menu;
 
     public enum STATES {
         Menu,
@@ -33,9 +35,11 @@ public class Game extends Canvas implements Runnable {
         Options,
         Storage,
         PetShop,
-        Florest
+        Florest,
+
     }
 
+    public STATES gameState = STATES.Menu;
 
     public Game() {
 
@@ -45,20 +49,17 @@ public class Game extends Canvas implements Runnable {
         map = new Map(this, handler);
         camera = new Camera(0, 0);
         inventory = new Inventory(handler, map);
-        handler.addObject(new Player(this, 500, 500, ID.Player, handler, map));
+        menu = new Menu(this, handler, map, inventory);
 
-        for (int i = 0; i < 7; i++) {
-            handler.addObject(new NormalCat(this, r.nextInt(WIDTH - 32) + 32, r.nextInt(HEIGHT - 32) + 32, randomID(ID.SimpleCats()), handler, map, inventory));
 
-        }
-//        handler.addObject(new NormalCat(this, 500, 500, ID.SimpleRed, handler, map));
+        handler.addObject(new NormalCat(this, 500, 500, ID.SimpleRed, handler, map, inventory));
 
 
         this.addKeyListener(new KeyInput(handler, this, map, inventory));
 
         MouseInput mouseInput = new MouseInput(this, handler, map);
         this.addMouseListener(mouseInput);
-
+        this.addMouseListener(menu);
 
         new Window(WIDTH, HEIGHT, "Capture The Cats", this);
 
@@ -113,14 +114,15 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void tick() {
-
-        for (int i = 0; i < handler.object.size(); i++) {
-            if (handler.object.get(i).getId() == ID.Player) {
-                camera.tick(handler.object.get(i));
+        if (gameState == STATES.Florest) {
+            for (int i = 0; i < handler.object.size(); i++) {
+                if (handler.object.get(i).getId() == ID.Player) {
+                    camera.tick(handler.object.get(i));
+                }
             }
         }
         handler.tick();
-
+        System.out.println(handler.object);
     }
 
     // Render everything
@@ -135,16 +137,20 @@ public class Game extends Canvas implements Runnable {
         Graphics2D g2d = (Graphics2D) g;
 
 
-        g2d.translate(-camera.getX(), -camera.getY());
+        if (gameState == STATES.Menu) {
+            menu.render(g);
+
+        } else if (gameState == STATES.Florest) {
+            g2d.translate(-camera.getX(), -camera.getY());
+
+            map.render(g);
 
 
+            handler.render(g);
 
-        map.render(g);
-
-        handler.render(g);
-
-        g2d.translate(camera.getX(), camera.getY());
-        inventory.render(g);
+            g2d.translate(camera.getX(), camera.getY());
+            inventory.render(g);
+        }
 
         g.dispose();
         bs.show();

@@ -23,6 +23,8 @@ public class NormalCat extends GameObject {
     private GameObject player;
     private Inventory inventory;
     private final BufferedImage catDisplaySkins;
+    private final BufferedImage catSittingRight;
+    private final BufferedImage catSittingLeft;
 
 
     public NormalCat(Game game, float x, float y, ID id, Handler handler, Map map, Inventory inventory) {
@@ -50,6 +52,9 @@ public class NormalCat extends GameObject {
 
             catDisplaySkins = map.simpleCatSS.grabImage2(0, 38, 35, 38);
 
+            catSittingRight = map.simpleCatSS.grabImage2(0, 0, 35, 38);
+            catSittingLeft = map.simpleCatSS.grabImage2(0, yPos, 35, 38);
+
 
         } else if (id == ID.SimpleBlue) {
             // Load blue skin
@@ -64,6 +69,10 @@ public class NormalCat extends GameObject {
 
             catDisplaySkins = map.simpleCatSS.grabImage2(0, 38 * 3, 35, 38);
 
+            catSittingRight = map.simpleCatSS.grabImage2(0, yPos * 2, 35, 38);
+            catSittingLeft = map.simpleCatSS.grabImage2(0, yPos * 3, 35, 38);
+
+
         } else if (id == ID.SimpleGreen) {
             // Load green skin
             catSkin[0] = map.simpleCatSS.grabImage2(xPos, yPos * 4, 35, 38);
@@ -76,8 +85,15 @@ public class NormalCat extends GameObject {
 
             catDisplaySkins = map.simpleCatSS.grabImage2(0, 38 * 5, 35, 38);
 
+            catSittingRight = map.simpleCatSS.grabImage2(0, yPos * 4, 35, 38);
+            catSittingLeft = map.simpleCatSS.grabImage2(0, yPos * 5, 35, 38);
+
+
         } else {
             catDisplaySkins = null;
+            catSittingRight = null;
+            catSittingLeft = null;
+            System.out.println("skins are null");
         }
 
 
@@ -113,6 +129,8 @@ public class NormalCat extends GameObject {
             animLeft.runAnimation();
         }
 
+
+
         for (int i = 0; i < handler.object.size(); i++) {
             GameObject tempObject = handler.object.get(i);
             if (tempObject.getId() == ID.Wall || ID.SimpleCats().contains(tempObject.getId()) && this.getId() != tempObject.getId()) {
@@ -131,13 +149,19 @@ public class NormalCat extends GameObject {
     }
 
     public void render(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        g.setColor(Color.CYAN);
-        g2d.draw(getBounds());
+//        Graphics2D g2d = (Graphics2D) g;
+//        g.setColor(Color.CYAN);
+//        g2d.draw(getBounds());
         if (velX > 0) {
             animRight.drawAnimation(g, x, y, 0);
         } else {
             animLeft.drawAnimation(g, x, y, 0);
+        }
+
+        if (velX == 0 && velY == 0) {
+            g.drawImage(catSittingRight, (int) x, (int) y, null);
+            g.drawImage(catSittingLeft, (int) x, (int) y, null);
+
         }
     }
 
